@@ -1,0 +1,43 @@
+{
+    "configurations": [
+         {
+            "name": "Win32",
+            "includePath": [
+                "C:/MinGW/include",
+                "C:/MinGW/lib/gcc/mingw32/4.6.2/include",
+                "C:/MinGW/lib/gcc/mingw32/4.6.2/include/c++",
+                "C:/MinGW/lib/gcc/mingw32/4.6.2/include/c++/tr1",
+                "C:/MinGW/lib/gcc/mingw32/4.6.2/include/c++/mingw32",
+                "${workspaceRoot}",
+                "${workspaceRoot}/src/ace_wrappers",
+                "${workspaceRoot}/src/include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE"
+            ],
+            "intelliSenseMode": "msvc-x64",
+            "browse": {
+                "path": [
+                    "C:/MinGW/include",
+                    "C:/MinGW/lib/gcc/mingw32/4.6.2/include",
+                    "C:/MinGW/lib/gcc/mingw32/4.6.2/include/c++",
+                    "C:/MinGW/lib/gcc/mingw32/4.6.2/include/c++/tr1",
+                    "C:/MinGW/lib/gcc/mingw32/4.6.2/include/c++/mingw32",
+                    "${workspaceRoot}",
+                    "${workspaceRoot}/src/ace_wrappers",
+                    "${workspaceRoot}/src/include"
+                ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            }
+        }
+    ],
+    "clang_format": 
+    {
+        "style": "file",
+        "fallback-style": "LLVM",
+        "sort-includes": false
+    },
+    "version": 3
+}
