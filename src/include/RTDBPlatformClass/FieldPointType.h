@@ -19,7 +19,7 @@
 #include "RTDBCommon/OS_Ext.h"
 #include "RTDBCommon/datetime.h"
 #include "RTDBCommon/KiwiVariant.h"
-#include "RTDBCommon/nodebase.h"
+#include "RTDBCommon/KiwiVariable.h"
 #include <map>
 #include <string>
 
@@ -41,9 +41,10 @@ namespace MACS_SCADA_SUD
 	*	\brief	通道地址,用来存放数据的I/O通道信息
 	*/
 	class FEPPLATFORMCLASS_API FieldPointType
-	 : public CNode
+		: public CKiwiVariable
 	{
-		FieldPointType();
+	public:
+		FieldPointType(long nNodeID);
 	protected:
 		virtual ~FieldPointType();
 	public:
@@ -61,10 +62,10 @@ namespace MACS_SCADA_SUD
 		//UaMutex m_statusCodeLock; //标签值状态码读写锁
 
 		virtual void setDeviceAddress(const std::string& deviceAddress);
-		virtual std::string getDeviceAddress() const;
+		virtual std::string getDeviceAddress();
 
 		virtual void setOffset(const std::string& offset);
-		virtual std::string getOffset() const;
+		virtual std::string getOffset();
 
 		// NeedConverse field
 		virtual void setNeedConverse(bool setvalue);
@@ -168,6 +169,11 @@ namespace MACS_SCADA_SUD
 		 */
 		void setTagOffline( long dateTime );
 
+
+		void setUATagOffline( UaDateTime dateTime );
+
+
+		void setUATagOffline( long dateTime );
 		//! read or write data variable
 
 		//virtual void setChildValue(const std::string& sName, const CKiwiVariant& value);

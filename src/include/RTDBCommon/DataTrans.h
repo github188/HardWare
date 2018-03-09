@@ -16,6 +16,7 @@
 #include "RTDBCommon/OS_Ext.h"
 #include "RTDBCommon/KiwiVariable.h"
 #include "RTDBCommon/CommonInfo.h"
+#include "RTDBPlatformClass/GeneralConfig.h"
 
 #include <string.h>
 using namespace std;
@@ -1655,10 +1656,14 @@ namespace MACS_SCADA_SUD{
 		variable.InitAttribute();
 		variable.szName = tTagItem.szTagName;
 
-		variable.AddAttribute("Type");
+		variable.AddAttribute(DEF_FieldPoint_DeviceAddress);
+		variable.AddAttribute(DEF_FieldPoint_Offset);
+
+		CKiwiVariant var(tTagItem.szAddr);
+		variable.setAttributeValue(DEF_FieldPoint_DeviceAddress, var);
+		variable.setAttributeValue(DEF_FieldPoint_Offset, var);
 
 	}
-
 	static void StrToUpper( char* str )
 	{
 	#ifdef _WINDOWS

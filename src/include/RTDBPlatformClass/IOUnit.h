@@ -304,6 +304,9 @@ namespace MACS_SCADA_SUD
 		void SetTagDisableState(bool bDisable);
 
 	protected:
+		Byte	m_bSimulate;
+		Byte	m_bOnline;
+		int		m_iDeviceAddr;
 		///所属通道指针
 		CIOPort* m_pIOPort;
 		//数据变量列表，可能为IO变量、PV变量或者内部变量
@@ -312,7 +315,6 @@ namespace MACS_SCADA_SUD
 		std::string szUnitName;
 
 	public:
-
 		std::map<std::string, FieldPointType*> m_mapStrAddTag;
 
 	private:

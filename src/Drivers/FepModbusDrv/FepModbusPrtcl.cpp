@@ -671,14 +671,14 @@ namespace MACS_SCADA_SUD
 			}
 
 			//! 判断设备是否被模拟了，如果被模拟了，则不发送请求了
-// 			if ( pDevice->IsSimulate() )
-// 			{
-// 				//! 写日志
-// 				sprintf( pchLog,"CFepModbusPrtcl::BuildRequest Device:%s Is Simulated!", pDevice->GetName().c_str());
-// 				pDriver->WriteLog( pchLog );
-// 				nRet = -2;
-// 				break;
-// 			}
+ 			if ( pDevice->IsSimulate() )
+ 			{
+ 				//! 写日志
+ 				sprintf( pchLog,"CFepModbusPrtcl::BuildRequest Device:%s Is Simulated!", pDevice->GetName().c_str());
+ 				pDriver->WriteLog( pchLog );
+ 				nRet = -2;
+ 				break;
+ 			}
 
 			//! 是MODBUS RTU，则需要进行链路诊断
 			if( m_byPrtclType == 0 ||  m_byPrtclType == 2)
@@ -750,33 +750,33 @@ namespace MACS_SCADA_SUD
 		//! 不是广播帧才启动定时器，
 		if ( !m_bIsBroadFrame )
 		{
-			////!防止同时启动两个定时器
-			//int nTId = m_pIOTimer->GetTimerID();
-			//int nRe = m_pIOTimer->KillTimer();
- 		//	if (pDriver->IsLog())
- 		//	{
- 		//		//! 写日志
- 		//		snprintf( pchLog, MAXDEBUGARRAYLEN, "CFepModbusPrtcl::BuildRequest Kill Timer Id:%d Res:%d!", nTId, nRe );
- 		//		pDriver->WriteLogAnyWay( pchLog );
- 		//	}
-			//
-			////! 启动定时器
-			//if( m_pIOTimer->SetTimer(nTimeOut) == 0 )
-			//{
-			//	if (pDriver->IsLog())
-			//	{
-			//		snprintf( pchLog, MAXDEBUGARRAYLEN, "CFepModbusPrtcl::BuildRequest SetTimer Success, TimerID = %d!", m_pIOTimer->GetTimerID() );
-			//		pDriver->WriteLogAnyWay( pchLog );
-			//	}
-			//}
-			//else
-			//{
-			//	if (pDriver->IsLog())
-			//	{
-			//		snprintf( pchLog, MAXDEBUGARRAYLEN, "CFepModbusPrtcl::BuildRequest SetTimer Error, TimerID = %d!", m_pIOTimer->GetTimerID() );
-			//		pDriver->WriteLog( pchLog );
-			//	}
-			//}
+			//!防止同时启动两个定时器
+			int nTId = m_pIOTimer->GetTimerID();
+			int nRe = m_pIOTimer->KillTimer();
+ 			if (pDriver->IsLog())
+ 			{
+ 				//! 写日志
+ 				//snprintf( pchLog, MAXDEBUGARRAYLEN, "CFepModbusPrtcl::BuildRequest Kill Timer Id:%d Res:%d!", nTId, nRe );
+ 				pDriver->WriteLogAnyWay( pchLog );
+ 			}
+			
+			//! 启动定时器
+			if( m_pIOTimer->SetTimer(nTimeOut) == 0 )
+			{
+				if (pDriver->IsLog())
+				{
+					//snprintf( pchLog, MAXDEBUGARRAYLEN, "CFepModbusPrtcl::BuildRequest SetTimer Success, TimerID = %d!", m_pIOTimer->GetTimerID() );
+					pDriver->WriteLogAnyWay( pchLog );
+				}
+			}
+			else
+			{
+				if (pDriver->IsLog())
+				{
+					//snprintf( pchLog, MAXDEBUGARRAYLEN, "CFepModbusPrtcl::BuildRequest SetTimer Error, TimerID = %d!", m_pIOTimer->GetTimerID() );
+					pDriver->WriteLog( pchLog );
+				}
+			}
 		}
 		else
 		{

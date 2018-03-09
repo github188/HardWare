@@ -4,7 +4,7 @@ namespace MACS_SCADA_SUD
 {
 
 	CKiwiVariable::CKiwiVariable(long	nNodeID)
-		: m_nNodeID(nNodeID)
+		: CNode(nNodeID)
 	{
 		m_mapAttribute.clear();
 	}
@@ -33,17 +33,11 @@ namespace MACS_SCADA_SUD
 		p = new CKiwiVariant;
 		m_mapAttribute.insert(std::pair<std::string, CKiwiVariant*>("Q",p));
 	}
-
-	long CKiwiVariable::nodeId()
-	{
-		return m_nNodeID;
-	}
-
+	
 	long CKiwiVariable::GetTimeStamp(void)
 	{
 
-		CKiwiVariant value;
-		getAttributeValue("tm", value);
+		CKiwiVariant value = getAttributeValue("tm");
 		long nVal;
 		value.tolong(nVal);
 		return nVal;
@@ -51,8 +45,7 @@ namespace MACS_SCADA_SUD
 
 	float CKiwiVariable::GetfValue()
 	{
-		CKiwiVariant value;
-		getAttributeValue("V", value);
+		CKiwiVariant value = getAttributeValue("V");
 		float nVal;
 		value.toFloat(nVal);
 		return nVal;
@@ -60,8 +53,7 @@ namespace MACS_SCADA_SUD
 
 	int CKiwiVariable::GetValue()
 	{
-		CKiwiVariant value;
-		getAttributeValue("V", value);
+		CKiwiVariant value = getAttributeValue("V");
 		int nVal;
 		value.toInt32(nVal);
 		return nVal;
@@ -69,8 +61,7 @@ namespace MACS_SCADA_SUD
 
 	unsigned char CKiwiVariable::GetByteValue()
 	{
-		CKiwiVariant value;
-		getAttributeValue("V", value);
+		CKiwiVariant value = getAttributeValue("V");
 		unsigned char byVal;
 		value.toByte(byVal);
 		return byVal;
@@ -109,18 +100,17 @@ namespace MACS_SCADA_SUD
 		return nRet;
 	}
 
-	int CKiwiVariable::getAttributeValue(const std::string& szAttribute, CKiwiVariant& value)
+	CKiwiVariant CKiwiVariable::getAttributeValue(const std::string& szAttribute)
 	{		
-		int nRet = -1;
+		CKiwiVariant value;
 		std::map<std::string, CKiwiVariant*>::iterator it = m_mapAttribute.find(szAttribute);
-		if(it != m_mapAttribute.end() )
+		if(it != m_mapAttribute.end())
 		{
 			CKiwiVariant *p = it->second;
 			value = *p;
-			nRet = 0;
 		}
 
-		return nRet;
+		return value;
 	}
 
 

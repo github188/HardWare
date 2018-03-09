@@ -129,7 +129,7 @@ int main(int argc, char* argv[])
     ACE_LOG_MSG->priority_mask(MSG_ERROR, ACE_Log_Msg::PROCESS);	
 	
 	// Wait for user command to terminate the server thread.
-	printf("Press x or X to exit!");
+	printf("\n=================================================\nPress x or X to exit!");
 	while ( ShutDownFlag() == 0  )
 	{
 		Sleep(10);

@@ -269,7 +269,8 @@ namespace MACS_SCADA_SUD
 			}
 		case Kiwi_String:
 			{
-				if (!strlen(source.value.pszValue))
+				size_t nLen = strlen(source.value.pszValue);
+				if (strlen(source.value.pszValue) > 0)
 				{
 					if(copy.vt == Kiwi_String)
 						delete copy.value.pszValue;

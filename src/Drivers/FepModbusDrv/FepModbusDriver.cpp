@@ -561,7 +561,6 @@ namespace MACS_SCADA_SUD
 		}
 		
 		int nAddr = pCfgUnit->GetDevAddr();
-		//std::string strDevName = pCfgUnit->browseName().toString().toUtf8();
 		std::string strDevName = pCfgUnit->GetUnitName();
 		if ( nAddr <= 0 || nAddr > 255 )
 		{

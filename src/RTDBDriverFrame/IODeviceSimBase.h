@@ -19,7 +19,7 @@
 #define _IODEVICESIMBASE_H_
 
 #include "RTDBDriverFrame/IODriverH.h"
-// #include "RTDBCommon/IOTimer.h"
+#include "RTDBCommon/IOTimer.h"
 
 #define  PI 3.1415926
 

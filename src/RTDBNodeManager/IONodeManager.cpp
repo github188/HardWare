@@ -38,11 +38,6 @@ CIONodeManager::~CIONodeManager(void)
 		{
 			AddPort(pIOPort, true);
 		}
-		 //else if(pData->getChangeFlag() == ChangeFlag_Dlt)
-		 //{
-			// //在线删除链路
-			// DelPort(pNewNode->nodeId(), true);
-		 //}		
 	 }
 	 else if(nType == FepId_DeviceType)
 	 {
@@ -230,32 +225,32 @@ Byte CIONodeManager::CreatePort(std::string sDriverName, tIOPortCfg IOPortCfg)
 Byte CIONodeManager::CreateUnit(std::string sDriverName, std::string sDeviceName, int iDevAddr)
 {
 	Byte ret = 0;
-	 CIOPort* pPort = GetPort(sDriverName);
-	 if (pPort != NULL)
-	 {
-	 	//创建设备节点
-	 	std::string sUnitName = sDriverName +":" + sDeviceName;
+	CIOPort* pPort = GetPort(sDriverName);
+	if (pPort != NULL)
+	{
+		//创建设备节点
+		std::string sUnitName = sDriverName +":" + sDeviceName;
 		long lUnitID = iDevAddr;
-	 	CIOUnit* pUnit = new CIOUnit(lUnitID, sUnitName, sDeviceName);
-	 	if (pPort && pUnit)
-	 	{
-	 		//设置设备地址
-	 		pUnit->SetDevAddr(iDevAddr);
-	 		pUnit->setIOPort(pPort);
-	 		pPort->AddUnit(sUnitName, pUnit);
-	 	}
+		CIOUnit* pUnit = new CIOUnit(lUnitID, sUnitName, sDeviceName);
+		if (pPort && pUnit)
+		{
+			//设置设备地址
+			pUnit->SetDevAddr(iDevAddr);
+			pUnit->setIOPort(pPort);
+			pPort->AddUnit(sUnitName, pUnit);
+		}
 		else
 		{
 			MACS_ERROR((ERROR_PERFIX ACE_TEXT("CIONodeManager::CreateDriver add IOUnit node %s failed!"), 
 				sUnitName));
 		}	
-	 }
-	 else
-	 {
-		 MACS_ERROR((ERROR_PERFIX ACE_TEXT("CIONodeManager::AddUaDevice IOPort node %s is't exist!"), 
-			 sDriverName));
-		 ret = -1;
-	 }
+	}
+	else
+	{
+		MACS_ERROR((ERROR_PERFIX ACE_TEXT("CIONodeManager::AddUaDevice IOPort node %s is't exist!"), 
+			sDriverName));
+		ret = -1;
+	}
 	return ret;
 }
 
@@ -488,17 +483,18 @@ bool CIONodeManager::DelPort(const long& portId, bool bOnline)
 
 CIOPort* CIONodeManager::GetPort(std::string sName)
 {
-	CIOPort* pPort = NULL;
 	ACE_Guard<ACE_Thread_Mutex> guard( m_mapPortslock ); 
-	// UaMutexLocker lock(&m_mapPortslock);
-	//MAP_PORT::iterator itPort = m_mapPorts.find(long(sName, IONODEMANAGER_NS_INDEX));
-	long lPortID = 0;
-	MAP_PORT::iterator itPort = m_mapPorts.find( lPortID );
-	if (itPort != m_mapPorts.end())
+
+	MAP_PORT::iterator itPort = m_mapPorts.begin();
+	while (itPort != m_mapPorts.end())
 	{
-		pPort = itPort->second;
+		if(itPort->second->getDrvName() == sName)
+		{
+			return itPort->second;
+		}
+		itPort++;
 	}
-	return pPort;
+	return NULL;
 }
 
 int CIONodeManager::GetNeedBackupVar( std::vector<CKiwiVariable*>& vecHotVariable )

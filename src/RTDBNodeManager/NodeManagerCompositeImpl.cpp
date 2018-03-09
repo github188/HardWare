@@ -127,7 +127,7 @@ namespace MACS_SCADA_SUD
 		if( -1 !=commoninfo.readXmlFile())
 		{
 			printf("Server LoadProjectCfg success\n");
-			MACS_ERROR((ERROR_PERFIX ACE_TEXT("LoadProjectCfg failed!\n")));
+			MACS_ERROR((ERROR_PERFIX ACE_TEXT("LoadProjectCfg success!\n")));
 		}
 		else
 		{
@@ -141,8 +141,8 @@ namespace MACS_SCADA_SUD
 			if(m_pIONodeManager)
 			{
 				std::map<std::string, T_DrvInfo*>::iterator itor = g_sDrvInfos.begin();
-				int iDrvIndex = 0;
-				printf("Server Add TagItems\n");
+				int iDrvIndex = 1;
+				printf("IoServer Init Driver Items\n");
 
 				while(itor!= g_sDrvInfos.end())
 				{
@@ -161,16 +161,16 @@ namespace MACS_SCADA_SUD
 
 					itor++;
 				}
-				printf("Server Add DrvInfo Count:%d\n", iDrvIndex);
+				printf("IoServer Add Driver Items Count:%d\n", iDrvIndex);
 
-				printf("Server Add TagItems\n");
+				printf("IoServer Add TagItems\n");
 
 				std::map<std::string, T_TagItem*>::iterator itTagItems = g_sTagItems.begin();
 				long iTagIndex = 0;
 				while(itTagItems != g_sTagItems.end())
 				{
 					T_TagItem* pTagItem = itTagItems->second;
-					CKiwiVariable* pVar = new CKiwiVariable(iTagIndex);
+					FieldPointType* pVar = new FieldPointType(iTagIndex);
 					
 					TranslateTagItem2Varient(*pTagItem, *pVar);
 
@@ -179,7 +179,7 @@ namespace MACS_SCADA_SUD
 					itTagItems++;
 					iTagIndex++;
 				}
-				printf("Server Add TagItems Count:%d\n", iTagIndex);
+				printf("IoServer Add TagItems Count:%d\n", iTagIndex);
 			}
 		}
 

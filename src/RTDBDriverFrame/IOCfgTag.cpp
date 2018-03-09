@@ -63,11 +63,11 @@ namespace MACS_SCADA_SUD
 		if (m_mapFieldPoints.size() > 0)
 		{
 			T_mapFieldPoints::iterator it = m_mapFieldPoints.begin();
-			// string sAddr = it->second->getOffset();
-			// if(!sAddr.isNull() && !sAddr.isEmpty())
-			// {
-			// 	strDName = sAddr;
-			// }
+			std::string sAddr = it->second->getOffset();
+			if(!sAddr.empty())
+			{
+				strDName = sAddr;
+			}
 		} 
 		return strDName;
 	}

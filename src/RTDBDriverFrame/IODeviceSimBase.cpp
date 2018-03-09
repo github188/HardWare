@@ -14,7 +14,7 @@
  *	\attention	Copyright (c) 2014, New NetGate Product Development,Update Co.,Ltd
  *	\attention	All rights reserved.
  */
-#include "IODeviceSimBase.h"
+#include "RTDBDriverFrame/IODeviceSimBase.h"
 #include "RTDBDriverFrame/IODeviceBase.h"
 #include "RTDBDriverFrame/IOCfgUnit.h"
 #include "RTDBPlatformClass/IOPort.h"
@@ -32,78 +32,78 @@ namespace MACS_SCADA_SUD
 	//!定时器回调函数
 	void OnSimTimeOut(void* p)
 	{
-		// CIODeviceSimBase* pDeviceSim = (CIODeviceSimBase*)p;
-		// if (NULL == pDeviceSim || NULL == pDeviceSim->GetParent())
-		// {
-		// 	return;
-		// }
+		 CIODeviceSimBase* pDeviceSim = (CIODeviceSimBase*)p;
+		 if (NULL == pDeviceSim || NULL == pDeviceSim->GetParent())
+		 {
+		 	return;
+		 }
 
-		// //!通道禁止、设备禁止、设备离线则直接返回
-		// CIODeviceBase* pDevice = pDeviceSim->GetParent();
-		// if (pDevice->GetIOCfgDriver()->IsDisable() || pDevice->IsDisable() || !pDevice->IsHot())
-		// {
-		// 	return;
-		// }
+		 //!通道禁止、设备禁止、设备离线则直接返回
+		 CIODeviceBase* pDevice = pDeviceSim->GetParent();
+		 if (pDevice->GetIOCfgDriver()->IsDisable() || pDevice->IsDisable() || !pDevice->IsHot())
+		 {
+		 	return;
+		 }
 
-		// //!得到当前设备的模拟方式,为正玄则进行角度参数变化
-		// if (pDeviceSim->GetSimMode() == SimulateType_Sin)
-		// {
-		// 	pDeviceSim->nDegree++;
-		// 	if (pDeviceSim->nDegree > pDeviceSim->FULLDEG)
-		// 	{
-		// 		pDeviceSim->nDegree = 0;
-		// 	}
-		// }
+		 //!得到当前设备的模拟方式,为正玄则进行角度参数变化
+		 if (pDeviceSim->GetSimMode() == SimulateType_Sin)
+		 {
+		 	pDeviceSim->nDegree++;
+		 	if (pDeviceSim->nDegree > pDeviceSim->FULLDEG)
+		 	{
+		 		pDeviceSim->nDegree = 0;
+		 	}
+		 }
 
-		// //!从设备对象中取出相应的标签对象进行模拟
-		// MAP_OBJTAG::iterator it = pDeviceSim->GetParent()->GetMapobjTag().begin();
-		// while(it != pDeviceSim->GetParent()->GetMapobjTag().end())
-		// {
-		// 	CIOCfgTag* pObjTag = it->second;
-		// 	if (pObjTag)
-		// 	{
-		// 		switch(pDeviceSim->GetSimMode())
-		// 		{
-		// 		case SimulateType_Sin:
-		// 			pDeviceSim->Sine(pObjTag);
-		// 			break;
-		// 		case SimulateType_Random:
-		// 			pDeviceSim->Random(pObjTag);
-		// 			break;
-		// 		case SimulateType_Increase:
-		// 			pDeviceSim->Increase(pObjTag);
-		// 			break;
-		// 		case SimulateType_Unknown:
-		// 			break;
-		// 		default:
-		// 			break;
-		// 		}
-		// 	}
-		// 	it++;
-		// }
+		 //!从设备对象中取出相应的标签对象进行模拟
+		 MAP_OBJTAG::iterator it = pDeviceSim->GetParent()->GetMapobjTag().begin();
+		 while(it != pDeviceSim->GetParent()->GetMapobjTag().end())
+		 {
+		 	CIOCfgTag* pObjTag = it->second;
+		 	if (pObjTag)
+		 	{
+		 		switch(pDeviceSim->GetSimMode())
+		 		{
+		 		case SimulateType_Sin:
+		 			pDeviceSim->Sine(pObjTag);
+		 			break;
+		 		case SimulateType_Random:
+		 			pDeviceSim->Random(pObjTag);
+		 			break;
+		 		case SimulateType_Increase:
+		 			pDeviceSim->Increase(pObjTag);
+		 			break;
+		 		case SimulateType_Unknown:
+		 			break;
+		 		default:
+		 			break;
+		 		}
+		 	}
+		 	it++;
+		 }
 
 	}
 
 	//!构造函数
 	CIODeviceSimBase::CIODeviceSimBase()
-		// :m_pIOCfgUnit(NULL), m_bySimMode(SimulateType_Sin), m_pDevice(NULL), m_pIOTimer(NULL)
-		// ,m_nSimPeriod(1000)
+		 :m_pIOCfgUnit(NULL), m_bySimMode(SimulateType_Sin), m_pDevice(NULL), m_pIOTimer(NULL)
+		 ,m_nSimPeriod(1000)
 	{
 		//!创建定时器
-		// m_pIOTimer = new CIOTimer(OnSimTimeOut, this);
-		// nDegree = 0;
+		m_pIOTimer = new CIOTimer(OnSimTimeOut, this);
+		nDegree = 0;
 	}
 
 	//!析构函数
 	CIODeviceSimBase::~CIODeviceSimBase()
 	{
-		// if (m_pIOTimer)
-		// {
-		// 	m_pIOTimer->KillTimer();
-		// 	ACE_OS::sleep(ACE_Time_Value(1));
-		// 	//delete m_pIOTimer;
-		// 	//m_pIOTimer = NULL;
-		// }
+		 if (m_pIOTimer)
+		 {
+		 	m_pIOTimer->KillTimer();
+		 	ACE_OS::sleep(ACE_Time_Value(1));
+		 	//delete m_pIOTimer;
+		 	//m_pIOTimer = NULL;
+		 }
 	}
 
 	//!获取类名
@@ -122,22 +122,22 @@ namespace MACS_SCADA_SUD
 	int CIODeviceSimBase::Random(void* p)
 	{
 		int nResult = -1;
-		// CIOCfgTag* pObjTag = (CIOCfgTag*)p;
-		// //!如果当前链路不是为主并不进行模拟计算
-		// if (NULL == pObjTag || !m_pDevice->IsHot())
-		// {
-		// 	return nResult;
-		// }
+		 CIOCfgTag* pObjTag = (CIOCfgTag*)p;
+		 //!如果当前链路不是为主并不进行模拟计算
+		 if (NULL == pObjTag || !m_pDevice->IsHot())
+		 {
+		 	return nResult;
+		 }
 
-		// Byte byVal[256] = {0};
-		// ACE_OS::memset(byVal, 0, 256);
-		// int nDataLen = 0;
-		// T_mapFieldPoints lstPoints = pObjTag->GetFieldPoints();
-		// T_mapFieldPoints::iterator itPoints;
-		// FieldPointType* pFieldPoint = NULL;
-		// for (itPoints = lstPoints.begin(); itPoints != lstPoints.end(); itPoints++)
-		// {
-		// 	pFieldPoint = itPoints->second;
+		 Byte byVal[256] = {0};
+		 ACE_OS::memset(byVal, 0, 256);
+		 int nDataLen = 0;
+		 T_mapFieldPoints lstPoints = pObjTag->GetFieldPoints();
+		 T_mapFieldPoints::iterator itPoints;
+		 FieldPointType* pFieldPoint = NULL;
+		 for (itPoints = lstPoints.begin(); itPoints != lstPoints.end(); itPoints++)
+		 {
+			 pFieldPoint = itPoints->second;
 		// 	UaNodeId dataType = pFieldPoint->dataType();
 		// 	OpcUa_NodeId dtNodeId;
 		// 	dataType.copyTo(&dtNodeId);
@@ -248,7 +248,7 @@ namespace MACS_SCADA_SUD
 		// 		}
 		// 	}
 		// 	OpcUa_NodeId_Clear(&dtNodeId);   //!释放资源
-		// }
+		 }
 		return nResult;
 	}
 
@@ -256,18 +256,18 @@ namespace MACS_SCADA_SUD
 	int CIODeviceSimBase::Increase(void* p)
 	{
 		int nResult = -1;
-		// CIOCfgTag* pIOTag = (CIOCfgTag*)p;
-		// //!如果当前链路不是为主并不进行模拟计算
-		// if (NULL == pIOTag || !m_pDevice->IsHot())
-		// {
-		// 	return nResult;
-		// }
-		// Byte byVal[256];
-		// ACE_OS::memset(byVal, 0, 256);
-		// int nLen = 0;
-		// T_mapFieldPoints mapFPs = pIOTag->GetFieldPoints();
-		// T_mapFieldPoints::iterator itFP = mapFPs.begin();
-		// FieldPointType* pFieldPoint = NULL;
+		 CIOCfgTag* pIOTag = (CIOCfgTag*)p;
+		 //!如果当前链路不是为主并不进行模拟计算
+		 if (NULL == pIOTag || !m_pDevice->IsHot())
+		 {
+		 	return nResult;
+		 }
+		 Byte byVal[256];
+		 ACE_OS::memset(byVal, 0, 256);
+		 int nLen = 0;
+		 T_mapFieldPoints mapFPs = pIOTag->GetFieldPoints();
+		 T_mapFieldPoints::iterator itFP = mapFPs.begin();
+		 FieldPointType* pFieldPoint = NULL;
 		// UaDataValue dataValue;
 		// UaVariant uaVariant;
 		// for (; itFP != mapFPs.end(); itFP++)
@@ -433,12 +433,12 @@ namespace MACS_SCADA_SUD
 	{
 		int nResult = -1;
 
-		// CIOCfgTag* pIOTag = (CIOCfgTag*)p;
-		// //!如果当前链路不是为主并不进行模拟计算
-		// if (NULL == pIOTag || !m_pDevice->IsHot())
-		// {
-		// 	return nResult;
-		// }
+		 CIOCfgTag* pIOTag = (CIOCfgTag*)p;
+		 //!如果当前链路不是为主并不进行模拟计算
+		 if (NULL == pIOTag || !m_pDevice->IsHot())
+		 {
+		 	return nResult;
+		 }
 
 		// Byte byVal[256] = {0};
 		// OpcUa_UInt32 nLen = 0;
@@ -491,10 +491,10 @@ namespace MACS_SCADA_SUD
 	int CIODeviceSimBase::Start(void)
 	{
 		int nResult = -1;
-		// if (m_pIOTimer)
-		// {
-		// 	nResult = m_pIOTimer->SetTimer(m_nSimPeriod);		//!因根据配置文件读取
-		// }
+		 if (m_pIOTimer)
+		 {
+		 	nResult = m_pIOTimer->SetTimer(m_nSimPeriod);		//!因根据配置文件读取
+		 }
 		return nResult;
 	}
 
@@ -502,58 +502,55 @@ namespace MACS_SCADA_SUD
 	int CIODeviceSimBase::Stop(void)
 	{
 		int nResult = -1;
-		// if (m_pIOTimer)
-		// {
-		// 	nResult = m_pIOTimer->KillTimer();
-		// }
+		if (m_pIOTimer)
+		{
+			nResult = m_pIOTimer->KillTimer();
+		}
 		return nResult;
 	}
 
 	//!设置标签类别管理对象指针 
 	void CIODeviceSimBase::SetIOCfgUnit(CIOCfgUnit* pIOUnitCfg)
 	{
-		// if (pIOUnitCfg)
-		// {
-		// 	m_pIOCfgUnit = pIOUnitCfg;
-		// }
+		if (pIOUnitCfg)
+		{
+			m_pIOCfgUnit = pIOUnitCfg;
+		}
 	}
 
 	//!获取标签类别管理对象指针
 	CIOCfgUnit* CIODeviceSimBase::GetIOCfgUnit()
 	{
-		// return m_pIOCfgUnit;
-		return NULL;
+		 return m_pIOCfgUnit;
 	}
 
 	//!设置对应设备对象指针
 	void CIODeviceSimBase::SetParent(CIODeviceBase* pParent)
 	{
-		// if (pParent)
-		// {
-		// 	m_pDevice = pParent;
-		// }
+		if (pParent)
+		{
+			m_pDevice = pParent;
+		}
 	}
 
 	//!获取对应设备对象指针
 	CIODeviceBase* CIODeviceSimBase::GetParent()
 	{
-		// return m_pDevice;
-		return NULL;
+		 return m_pDevice;
 	}
 
 	//!获取模拟类型
 	Byte CIODeviceSimBase::GetSimMode()
 	{
-		// return m_bySimMode;
-		return NULL;
+		 return m_bySimMode;
 	}
 
 	//!得到随机字符
 	void CIODeviceSimBase::GetRandString(char& chStr)
 	{
-		// int nData = rand();
-		// nData = nData % 9;
-		// chStr = 0x41 + nData;
+		int nData = rand();
+		nData = nData % 9;
+		chStr = 0x41 + nData;
 	}
 
 	void CIODeviceSimBase::SetSimPeriod( int nInternal )

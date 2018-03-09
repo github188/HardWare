@@ -5,18 +5,18 @@
 #include "KiwiVariant.h"
 #include <map>
 #include <string>
+#include "RTDBCommon/nodebase.h"
 
 namespace MACS_SCADA_SUD
 {
 	class COMMONBASECODE_API CKiwiVariable
+		: public CNode
 	{
 	public:
 		CKiwiVariable(long	nNodeID);
 		virtual ~CKiwiVariable(void);
 
 		std::string szName;//±êÇ©Ãû
-
-		long	nodeId();
 
 		void InitAttribute(void);
 
@@ -34,10 +34,9 @@ namespace MACS_SCADA_SUD
 
 		int setAttributeValue(const std::string& szAttribute, const CKiwiVariant& value);
 
-		int getAttributeValue(const std::string& szAttribute, CKiwiVariant& value);
+		CKiwiVariant  getAttributeValue(const std::string& szAttribute);
 	private:
 		std::map<std::string, CKiwiVariant*> m_mapAttribute;
-		long	m_nNodeID;
 	};
 	
 };

@@ -738,12 +738,10 @@ namespace MACS_SCADA_SUD
 	int CIODeviceBase::InitVariableInfo(CIOUnit* pIOUnit)
 	{
 		int nResult = -1;
-		//Add for BUG62547 FEP单元测试DriverFrame模块的IDDeviceBase.cpp中的InitVariableInfo函数没有对入参进行有效性检查，并且对成员变量的判断用else即可 on 20160106 below 
 		if (NULL == pIOUnit)
 		{
 			return nResult;
 		}
-		//Add for BUG62547 FEP单元测试DriverFrame模块的IDDeviceBase.cpp中的InitVariableInfo函数没有对入参进行有效性检查，并且对成员变量的判断用else即可 on 20160106 above 
 		if (NULL == m_pIOUnitCfg)
 		{
 			m_pIOUnitCfg = new CIOCfgUnit(this);

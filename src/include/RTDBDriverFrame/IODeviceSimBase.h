@@ -19,7 +19,7 @@
 #define _IODEVICESIMBASE_H_
 
 #include "RTDBDriverFrame/IODriverH.h"
-// #include "RTDBCommon/IOTimer.h"
+#include "RTDBCommon/IOTimer.h"
 
 #define  PI 3.1415926
 
@@ -172,14 +172,14 @@ namespace MACS_SCADA_SUD
 		//!模拟模式
 		Byte m_bySimMode;
 
-		// //!标签类别管理对象指针
+		 //!标签类别管理对象指针
 		CIOCfgUnit* m_pIOCfgUnit;
 
-		// //!设备对象指针
+		 //!设备对象指针
 		CIODeviceBase* m_pDevice;
 
-		// //!定时器
-		// CIOTimer* m_pIOTimer;
+		 //!定时器
+		 CIOTimer* m_pIOTimer;
 
 		//!模拟周期
 		int m_nSimPeriod;

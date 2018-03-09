@@ -31,6 +31,9 @@ CIOUnit::CIOUnit(const long& nId)
 	:CFepObjectType(nId)
 	, m_pDeviceSim(NULL)
 	, m_pIOPort(NULL)
+	, m_bSimulate(0)
+	, m_bOnline(0)
+	, m_iDeviceAddr(-1)
 {
     // UaStatus      addStatus;
 	
@@ -50,6 +53,7 @@ CIOUnit::CIOUnit(const long& nId)
 	// m_pDeviceSim = NULL;
 	// m_mapStrAddTag.clear();
 	//数据变量列表，可能为IO变量、PV变量或者内部变量
+
 	m_mapDataVariables.clear();
 
 	m_mapStrAddTag.clear();
@@ -60,6 +64,9 @@ CIOUnit::CIOUnit(const long& nodeId, const std::string& szUnit)
 	, szUnitName(szUnitName)
 	, m_pDeviceSim(NULL)
 	, m_pIOPort(NULL)
+	, m_bSimulate(0)
+	, m_bOnline(0)
+	, m_iDeviceAddr(-1)
 {
 	SetNodeID(nodeId);
 	//数据变量列表，可能为IO变量、PV变量或者内部变量
@@ -74,6 +81,9 @@ CIOUnit::CIOUnit(const long& nodeId, const std::string& szUnit, const std::strin
 	, szUnitName(szUnit)
 	, m_pDeviceSim(NULL)
 	, m_pIOPort(NULL)
+	, m_bSimulate(0)
+	, m_bOnline(0)
+	, m_iDeviceAddr(-1)
 {
 	SetNodeID(nodeId);
 	//数据变量列表，可能为IO变量、PV变量或者内部变量
@@ -92,6 +102,9 @@ void CIOUnit::initialize(bool bCreateProp)
 	// }
 	m_pDeviceSim = NULL;
 	m_pIOPort = NULL;
+	m_bSimulate = 0;
+	m_bOnline = 0;
+	m_iDeviceAddr= -1;
 }
 
 /** Destruction
@@ -335,28 +348,12 @@ void CIOUnit::GetAllTags(std::vector<CKiwiVariable*> &vecTags)
 
 int CIOUnit::GetDevAddr()
 {
-	// CKiwiVariant var;
-	// UaDataValue dataValue;
-	int iDeviceAddr = -1;
-	// if (m_pAddr)
-	// {
-	// 	dataValue = m_pAddr->value(NULL);
-	// 	var = *dataValue.value();
-	// 	var.toInt32(iDeviceAddr);
-	// }
-	return iDeviceAddr;
+	return m_iDeviceAddr;
 }
 
 void CIOUnit::SetDevAddr(int iDeviceAddr)
 {
-	//CKiwiVariant var;
-	//UaDataValue dataValue;
-	// if (m_pAddr)
-	// {
-	// 	var.setInt32(iDeviceAddr);
-	// 	dataValue.setValue(var, true);
-	// 	m_pAddr->setValue(NULL, dataValue, false);
-	// }
+	m_iDeviceAddr = iDeviceAddr;
 }
 
 std::string CIOUnit::GetDevCfgFileName()
@@ -366,31 +363,12 @@ std::string CIOUnit::GetDevCfgFileName()
 
 bool CIOUnit::IsOnline()
 {
-	// UaMutexLocker lock(&m_IsOnlineLock);
-	// assert(m_pIsOnline != NULL);
-	// CKiwiVariant var;
-	Byte ret = 0;
-	// if (m_pIsOnline)
-	// {
-	// 	UaDataValue dataValue(m_pIsOnline->value(NULL));
-	// 	var = *dataValue.value();
-	// 	var.toByte(ret);
-	// }
-	return (ret == DEVICE_ONLINE);
+	return (m_bOnline == DEVICE_ONLINE);
 }
 
 Byte CIOUnit::GetRunState()
 {
-	// assert(m_pIsOnline != NULL);
-	// CKiwiVariant var;
-	Byte ret = 0;
-	// if (m_pIsOnline)
-	// {
-	// 	UaDataValue dataValue(m_pIsOnline->value(NULL));
-	// 	var = *dataValue.value();
-	// 	var.toByte(ret);
-	// }
-	return ret;
+	return m_bOnline;
 }
 
 bool CIOUnit::IsSimulate()
@@ -603,13 +581,13 @@ void CIOUnit::EnableUnit()
 void CIOUnit::ForceUnit(Byte PrmScnd)
 {
 	// assert(m_pIOPort);
-	// return m_pIOPort->ForceChannel(PrmScnd);
+	 return m_pIOPort->ForceChannel(PrmScnd);
 }
 
 void CIOUnit::DeforceUnit()
 {
 	// assert(m_pIOPort);
-	// return m_pIOPort->DeforceChannel();
+	 return m_pIOPort->DeforceChannel();
 }
 
 void CIOUnit::SetExtraRange(bool bExtraRange)
@@ -646,16 +624,16 @@ CIOPort* CIOUnit::GetIOPort()
 
 CKiwiVariable* CIOUnit::GetDataVariableByNodeId(long strNodeId)
 {
-	// std::map<long, CKiwiVariable*>::iterator it;
-	// it = m_mapDataVariables.find(strNodeId);
-	// if (it != m_mapDataVariables.end())
-	// {
-	// 	return it->second;
-	// }
-	// else
-	// {
+	std::map<long, CKiwiVariable*>::iterator it;
+	it = m_mapDataVariables.find(strNodeId);
+	if (it != m_mapDataVariables.end())
+	{
+		return it->second;
+	}
+	else
+	{
 		return NULL;
-	// }
+	}
 }
 
 unsigned int CIOUnit::GetVariableCount()
@@ -685,35 +663,35 @@ unsigned int CIOUnit::GetVariableCount()
 
  void CIOUnit::SetTagDisableState(bool bDisable)
  {
-	//  std::map<long, CKiwiVariable*>::iterator it = m_mapDataVariables.begin();
-	//  for (; it != m_mapDataVariables.end(); it++)
-	//  {
-	// 	 CKiwiVariable* pVar = it->second;
-	// 	 if ((pVar != NULL) && (pVar->typeDefinitionId() == long(DEF_FieldPointType, FEP_TYPE_NS_INDEX)))
-	// 	 {
-	// 		 FieldPointType* pTag = dynamic_cast<FieldPointType*>(pVar);
-	// 		 if (pTag != NULL)
-	// 		 {
-	// 			 if (bDisable)
-	// 			 {
-	// 				 pTag->Disable();
-	// 			 }
-	// 			 else
-	// 			 {
-	// 				 pTag->cancelDisable();
-	// 			 }
-	// 		 }
-	// 	 }
-	//  }
+	 std::map<long, CKiwiVariable*>::iterator it = m_mapDataVariables.begin();
+	 for (; it != m_mapDataVariables.end(); it++)
+	 {
+		 CKiwiVariable* pVar = it->second;
+		 if ((pVar != NULL)/* && (pVar->typeDefinitionId() == long(DEF_FieldPointType, FEP_TYPE_NS_INDEX))*/)
+		 {
+			 FieldPointType* pTag = dynamic_cast<FieldPointType*>(pVar);
+			 if (pTag != NULL)
+			 {
+				 if (bDisable)
+				 {
+					 pTag->Disable();
+				 }
+				 else
+				 {
+					 pTag->cancelDisable();
+				 }
+			 }
+		 }
+	  }
  }
 
  bool CIOUnit::IsDevCommFieldPoint(const std::string &offSet)
  {
 	 bool red = false;
-	//  if (offSet == DT_ISONLINE || offSet == DT_ISONLINE_A|| offSet == DT_ISONLINE_B)
-	//  {
-	// 	 red = true;
-	//  }
+	 if (offSet == DT_ISONLINE || offSet == DT_ISONLINE_A|| offSet == DT_ISONLINE_B)
+	 {
+		 red = true;
+	 }
 	 return red;
  }
 
@@ -747,75 +725,74 @@ std::string CIOUnit::GetPeerDevCommType()
 
 void CIOUnit::SetPeerDevComm(bool isOnLine)
 {
-	// std::string peerDevCommStr = GetPeerDevCommType();
-	// Byte byOnLine = 0;
-	// std::map<std::string, FieldPointType*>::iterator it = m_mapStrAddTag.find(peerDevCommStr.toUtf8());
-	// if (it != m_mapStrAddTag.end())
-	// {
-	// 	FieldPointType* pFiledPoint = it->second;
-	// 	if (isOnLine)
-	// 	{
-	// 		byOnLine = 1;
-	// 	}
-	// 	else
-	// 	{
-	// 		byOnLine = 0;
-	// 	}
-	// 	pFiledPoint->setValue(&byOnLine, sizeof(byOnLine), 0);
-
-	// }
+	std::string peerDevCommStr = GetPeerDevCommType();
+	Byte byOnLine = 0;
+	std::map<std::string, FieldPointType*>::iterator it = m_mapStrAddTag.find(peerDevCommStr);
+	if (it != m_mapStrAddTag.end())
+	{
+		FieldPointType* pFiledPoint = it->second;
+		if (isOnLine)
+		{
+			byOnLine = 1;
+		}
+		else
+		{
+			byOnLine = 0;
+		}
+		//pFiledPoint->setValue(&byOnLine, sizeof(byOnLine), 0);
+	}
 }
 
  void CIOUnit::SetTagOnLineState(bool isOnLine, long dateTime)
  { 	 
-	//  if(NULL == this->GetIOPort())
-	//  {
-	// 	 return;
-	//  }
-	//  std::string uDrvName = this->GetIOPort()->getDrvName();	
-	//  std::string strDrvName = uDrvName.toUtf8();
-	//  Byte primMark = PrmOrScnd();
-	//  std::map<long, CKiwiVariable*>::iterator it = m_mapDataVariables.begin();
-	//  for (; it != m_mapDataVariables.end(); it++)
-	//  {
-	// 	 CKiwiVariable* pVar = it->second;
-	// 	 if ((pVar != NULL) && (pVar->typeDefinitionId() == long(DEF_FieldPointType, FEP_TYPE_NS_INDEX)))
-	// 	 {
-	// 		 FieldPointType* pTag = dynamic_cast<FieldPointType*>(pVar);
-	// 		 if (pTag != NULL)
-	// 		 {
-	// 			 //!从机数据由主机同步而来，所以主机更新数据从机不更新,DEVCOMM节点也是//
-	// 			 if (!primMark)
-	// 			 {
-	// 				 continue;
-	// 			 }
+	  if(NULL == this->GetIOPort())
+	  {
+	 	 return;
+	  }
+	  std::string uDrvName = this->GetIOPort()->getDrvName();	
+	  std::string strDrvName = uDrvName;
+	  Byte primMark = PrmOrScnd();
+	  std::map<long, CKiwiVariable*>::iterator it = m_mapDataVariables.begin();
+	  for (; it != m_mapDataVariables.end(); it++)
+	  {
+	 	 CKiwiVariable* pVar = it->second;
+	 	 if ((pVar != NULL)/* && (pVar->typeDefinitionId() == long(DEF_FieldPointType, FEP_TYPE_NS_INDEX))*/)
+	 	 {
+	 		 FieldPointType* pTag = dynamic_cast<FieldPointType*>(pVar);
+	 		 if (pTag != NULL)
+	 		 {
+	 			 //!从机数据由主机同步而来，所以主机更新数据从机不更新,DEVCOMM节点也是//
+	 			 if (!primMark)
+	 			 {
+	 				 continue;
+	 			 }
 
-	// 			 //对于UADriver上采集的FieldPoint不设置在线的时标和状态而是以DataChange的初始值为准
-	// 			 if (isOnLine)
-	// 			 {
-	// 				 if(strDrvName == OPCUADRIVER)
-	// 				 {
-	// 					 pTag->setUATagOnline(dateTime);
-	// 				 }
-	// 				 else
-	// 				 {
-	// 					 pTag->setOnline(dateTime);
-	// 				 }
-	// 			 }
-	// 			 else
-	// 			 {
-	// 				 if (strDrvName == OPCUADRIVER)
-	// 				 {
-	// 					 pTag->setUATagOffline(dateTime);
-	// 				 }
-	// 				 else
-	// 				 {
-	// 					 pTag->setOffline(dateTime);
-	// 				 }
-	// 			 }
-	// 		 }
-	// 	 }
-	//  }
+	 			 //对于UADriver上采集的FieldPoint不设置在线的时标和状态而是以DataChange的初始值为准
+	 			 if (isOnLine)
+	 			 {
+	 				 if(strDrvName == OPCUADRIVER)
+	 				 {
+	 					 pTag->setUATagOnline(dateTime);
+	 				 }
+	 				 else
+	 				 {
+	 					 pTag->setOnline(dateTime);
+	 				 }
+	 			 }
+	 			 else
+	 			 {
+	 				 if (strDrvName == OPCUADRIVER)
+	 				 {
+	 					 pTag->setUATagOffline(dateTime);
+	 				 }
+	 				 else
+	 				 {
+	 					 pTag->setOffline(dateTime);
+	 				 }
+	 			 }
+	 		 }
+	 	 }
+	  }
  }
 
  bool CIOUnit::IsOffLine()

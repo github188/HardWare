@@ -8,7 +8,8 @@
 
 using namespace MACS_SCADA_SUD;
 
-FieldPointType::FieldPointType()	
+FieldPointType::FieldPointType(long nNodeID)
+	: CKiwiVariable(nNodeID)
 {
 	initialize();
 }
@@ -248,14 +249,13 @@ void FieldPointType::setDeviceAddress(const std::string& DeviceAddress)
 {
 	CKiwiVariant value;
 	value.setString(DeviceAddress);
-	// //setChildValue(DEF_FieldPoint_DeviceAddress, value);
+	setAttributeValue(DEF_FieldPoint_DeviceAddress, value);
 }
 
-std::string FieldPointType::getDeviceAddress() const
+std::string FieldPointType::getDeviceAddress()
 {
-	std::string ret;
-	// CKiwiVariant defaultValue = getChildValue(DEF_FieldPoint_DeviceAddress);
-	// std::string ret = defaultValue.toString();
+	CKiwiVariant defaultValue  = getAttributeValue(DEF_FieldPoint_DeviceAddress);
+	std::string ret = defaultValue.toString();
 	return ret;
 }
 
@@ -263,14 +263,13 @@ void FieldPointType::setOffset(const std::string& offset)
 {
 	CKiwiVariant value;
 	value.setString(offset);
-	//setChildValue(DEF_FieldPoint_Offset, value);
+	setAttributeValue(DEF_FieldPoint_Offset, value);
 }
 
-std::string FieldPointType::getOffset() const
+std::string FieldPointType::getOffset()
 {
-	std::string ret;
-	// CKiwiVariant defaultValue = getChildValue(DEF_FieldPoint_Offset);
-	// std::string ret = defaultValue.toString();
+	CKiwiVariant defaultValue = getAttributeValue(DEF_FieldPoint_Offset);
+	std::string ret = defaultValue.toString();
 	return ret;
 }
 
@@ -876,15 +875,24 @@ std::string FieldPointType::displayName()
 	return std::string("");
 }
 
-// void FieldPointType::setUATagOffline( UaDateTime dateTime )
-// {
-// 	UaDataValue fpVal = this->value(NULL);
-// 	m_uOldStatus = fpVal.statusCode();
-// 	std::string ustrMsg(std::string("FieldPointType::setUATagOffline nodeId[%1].").arg(this->nodeId().toFullString().toUtf8()));
-// 	LOG_INFO(MOD_FepPlatformClass, ustrMsg.toUtf8(), this);
-// 	setOffline(dateTime);
-// }
+void FieldPointType::setUATagOffline( UaDateTime dateTime )
+{
+	//UaDataValue fpVal = this->value(NULL);
+	//m_uOldStatus = fpVal.statusCode();
+	//std::string ustrMsg(std::string("FieldPointType::setUATagOffline nodeId[%1].").arg(this->nodeId().toFullString().toUtf8()));
+	//LOG_INFO(MOD_FepPlatformClass, ustrMsg.toUtf8(), this);
+	//setOffline(dateTime);
+}
 
+
+void FieldPointType::setUATagOffline( long dateTime )
+{
+	//UaDataValue fpVal = this->value(NULL);
+	//m_uOldStatus = fpVal.statusCode();
+	//std::string ustrMsg(std::string("FieldPointType::setUATagOffline nodeId[%1].").arg(this->nodeId().toFullString().toUtf8()));
+	//LOG_INFO(MOD_FepPlatformClass, ustrMsg.toUtf8(), this);
+	//setOffline(dateTime);
+}
 CKiwiVariant FieldPointType::value()
 {
 	return m_realVal;
